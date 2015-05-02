@@ -97,9 +97,9 @@ var Router = React.createClass({
                 onResponderMove={didMoveFinger}
                 onResponderTerminationRequest={preventDefault}>
                 <Content
+                    {...route.passProps}
                     name={route.name}
                     index={route.index}
-                    data={route.data}
                     toRoute={goForward}
                     toBack={goBackwards}
                     customAction={customAction}
