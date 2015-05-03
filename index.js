@@ -50,20 +50,16 @@ var Router = React.createClass({
 
     renderScene: function ( route, navigator ) {
 
-        var goForward = function ( route ) {
+        var goForward = route => {
             route.index = this.state.route.index + 1 || 1;
             navigator.push(route);
-        }.bind(this);
+        };
 
-        var goBackwards = function () {
-            this.onBack(navigator);
-        }.bind(this);
+        var goBackwards = () => this.onBack(navigator);
 
-        var customAction = function ( opts ) {
-            this.customAction(opts);
-        }.bind(this);
+        var customAction = opts => this.customAction(opts);
 
-        var didStartDrag = function ( evt ) {
+        var didStartDrag =  evt => {
             var x = evt.nativeEvent.pageX;
             if (x < 28) {
                 this.setState({
@@ -72,21 +68,19 @@ var Router = React.createClass({
                 });
                 return true;
             }
-        }.bind(this);
+        };
 
         // Recognize swipe back gesture for navigation
-        var didMoveFinger = function ( evt ) {
+        var didMoveFinger = evt => {
             var draggedAway = ((evt.nativeEvent.pageX - this.state.dragStartX) > 30);
             if (!this.state.didSwitchView && draggedAway) {
                 this.onBack(navigator);
                 this.setState({ didSwitchView: true });
             }
-        }.bind(this);
+        };
 
         // Set to false to prevent iOS from hijacking the responder
-        var preventDefault = function ( evt ) {
-            return true;
-        };
+        var preventDefault = e => true;
 
         var Content = route.component;
 
@@ -118,7 +112,7 @@ var Router = React.createClass({
                 initialRoute={this.props.firstRoute}
                 navigationBar={
                     <NavBarContainer
-                        ref="naviagator"
+                        ref="navigator"
                         style={this.props.headerStyle}
                         navigator={navigator}
                         currentRoute={this.state.route}

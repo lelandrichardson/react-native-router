@@ -75,7 +75,7 @@ var NavBarContent = React.createClass({
 
         leftCorner = (
             <View style={[styles.corner, styles.alignLeft]}>
-        {leftCornerContent}
+                {leftCornerContent}
             </View>
         );
 
@@ -91,7 +91,7 @@ var NavBarContent = React.createClass({
 
         rightCorner = (
             <View style={[styles.corner, styles.alignRight]}>
-        {rightCornerContent}
+                {rightCornerContent}
             </View>
         );
 
@@ -106,22 +106,22 @@ var NavBarContent = React.createClass({
         } else {
             titleContent = (
                 <Text style={[styles.navbarText, this.props.titleStyle]}>
-          {this.props.route.name}
+                    {this.props.route.name}
                 </Text>
             );
         }
 
         titleComponent = (
             <View>
-        {titleContent}
+                {titleContent}
             </View>
         );
 
         return (
             <View style={[styles.navbar, this.props.route.headerStyle, transitionStyle]}>
-        {leftCorner}
-        {titleComponent}
-        {rightCorner}
+                {leftCorner}
+                {titleComponent}
+                {rightCorner}
             </View>
         );
     }
