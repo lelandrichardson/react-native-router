@@ -31,7 +31,7 @@ var NavBarContent = React.createClass({
                 this.tweenState('opacity', {
                     easing: tweenState.easingTypes.easeInOutQuad,
                     duration: 200,
-                    endValue: 1
+                    endValue: this.props.willDisappear ? 0 : 1
                 });
             }, 0);
         }
@@ -39,17 +39,14 @@ var NavBarContent = React.createClass({
 
     goBack: function () {
         if (!this.props.willDisappear) {
-            this.props.goBack();
+            this.props.router.pop();
         }
     },
 
     goForward: function ( route ) {
-        this.props.goForward(route);
+        this.props.router.push(route);
     },
 
-    customAction: function ( opts ) {
-        this.props.customAction(opts);
-    },
 
     render () {
         var transitionStyle = {
@@ -68,9 +65,14 @@ var NavBarContent = React.createClass({
 
         if (this.props.route.leftCorner) {
             var LeftCorner = this.props.route.leftCorner;
-            leftCornerContent = <LeftCorner toRoute={this.goForward} customAction={this.customAction} />;
+            leftCornerContent = <LeftCorner router={this.props.router} />;
         } else if (this.props.route.index > 0) {
-            leftCornerContent = <NavButton onPress={this.goBack} backButtonComponent={this.props.backButtonComponent} />;
+            leftCornerContent = (
+                <NavButton
+                    router={this.props.router}
+                    onPress={this.goBack}
+                    backButtonComponent={this.props.backButtonComponent} />
+            );
         }
 
         leftCorner = (
@@ -86,7 +88,7 @@ var NavBarContent = React.createClass({
 
         if (this.props.route.rightCorner || this.props.rightCorner) {
             var RightCorner = this.props.route.rightCorner || this.props.rightCorner;
-            rightCornerContent = <RightCorner toRoute={this.goForward} customAction={this.customAction} />;
+            rightCornerContent = <RightCorner router={this.props.router} />;
         }
 
         rightCorner = (
@@ -102,17 +104,17 @@ var NavBarContent = React.createClass({
 
         if (this.props.route.titleComponent) {
             var TitleComponent = this.props.route.titleComponent;
-            titleContent = <TitleComponent />;
+            titleContent = <TitleComponent router={this.props.router} />;
         } else {
             titleContent = (
-                <Text style={[styles.navbarText, this.props.titleStyle]}>
+                <Text style={[styles.navbarText, this.props.titleStyle]} numberOfLines={1}>
                     {this.props.route.name}
                 </Text>
             );
         }
 
         titleComponent = (
-            <View>
+            <View style={{ flex: 4 }}>
                 {titleContent}
             </View>
         );
@@ -152,7 +154,6 @@ var styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
-
     alignLeft: {
         alignItems: 'flex-start'
     },

@@ -13,13 +13,21 @@ var {
 
 var Router = React.createClass({
 
+    componentWillMount: function() {
+        this.router = {
+            push: this.push,
+            pop: this.pop,
+            replace: this.replace,
+            setTitle: this.setTitle
+        };
+    },
+
     getInitialState: function () {
         return {
             route: {
                 name: null,
                 index: null
             },
-            dragStartX: null,
             didSwitchView: null,
         }
     },
@@ -28,79 +36,44 @@ var Router = React.createClass({
         this.setState({ route: route });
     },
 
-    onBack: function ( navigator ) {
+    pop: function () {
         if (this.state.route.index > 0) {
-            navigator.pop();
+            this.refs.navigator.pop();
         }
     },
 
-    onForward: function ( route, navigator ) {
-        route.index = this.state.route.index + 1 || 1;
-        navigator.push(route);
-    },
-
-    openRoute: function ( route ) {
+    push: function ( route ) {
         route.index = this.state.route.index + 1 || 1;
         this.refs.navigator.push(route);
     },
 
-    customAction: function ( opts ) {
-        this.props.customAction(opts);
+    replace: function ( route ) {
+        route.index = this.state.route.index;
+        this.refs.navigator.replace(route);
+    },
+
+    setTitle: function (title) {
+        this.setState({
+            route: Object.assign(this.state.route, {
+                name: title
+            })
+        });
     },
 
     renderScene: function ( route, navigator ) {
-
-        var goForward = route => {
-            route.index = this.state.route.index + 1 || 1;
-            navigator.push(route);
-        };
-
-        var goBackwards = () => this.onBack(navigator);
-
-        var customAction = opts => this.customAction(opts);
-
-        var didStartDrag =  evt => {
-            var x = evt.nativeEvent.pageX;
-            if (x < 28) {
-                this.setState({
-                    dragStartX: x,
-                    didSwitchView: false
-                });
-                return true;
-            }
-        };
-
-        // Recognize swipe back gesture for navigation
-        var didMoveFinger = evt => {
-            var draggedAway = ((evt.nativeEvent.pageX - this.state.dragStartX) > 30);
-            if (!this.state.didSwitchView && draggedAway) {
-                this.onBack(navigator);
-                this.setState({ didSwitchView: true });
-            }
-        };
-
-        // Set to false to prevent iOS from hijacking the responder
-        var preventDefault = e => true;
 
         var Content = route.component;
 
         return (
             <View
-                style={[styles.container, this.props.bgStyle]}
-                onStartShouldSetResponder={didStartDrag}
-                onResponderMove={didMoveFinger}
-                onResponderTerminationRequest={preventDefault}>
+                style={[styles.container, this.props.bgStyle]}>
                 <Content
+                    navigator={navigator}
+                    router={this.router}
                     {...route.passProps}
-                    name={route.name}
-                    index={route.index}
-                    toRoute={goForward}
-                    toBack={goBackwards}
-                    customAction={customAction}
                 />
             </View>
-        )
-
+        );
     },
 
     render: function () {
@@ -109,19 +82,17 @@ var Router = React.createClass({
 
         return (
             <Navigator
+                ref="navigator"
                 initialRoute={this.props.firstRoute}
                 navigationBar={
                     <NavBarContainer
-                        ref="navigator"
                         style={this.props.headerStyle}
                         navigator={navigator}
+                        router={this.router}
                         currentRoute={this.state.route}
                         backButtonComponent={this.props.backButtonComponent}
                         rightCorner={this.props.rightCorner}
                         titleStyle={this.props.titleStyle}
-                        toRoute={this.onForward}
-                        toBack={this.onBack}
-                        customAction={this.customAction}
                     />
                     }
                 renderScene={this.renderScene}
@@ -135,7 +106,6 @@ var styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F5FCFF',
-        marginTop: 64
     },
 });
 

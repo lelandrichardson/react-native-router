@@ -2,6 +2,8 @@
 
 var React = require('react-native');
 
+var BlurView = require('react-native-blur').BlurView;
+
 var NavBarContent = require('./NavBarContent');
 
 var {
@@ -27,27 +29,24 @@ var NavBarContainer = React.createClass({
     },
 
     goBack: function () {
-        this.props.toBack(this.props.navigator);
+        this.props.router.pop();
     },
 
     goForward: function ( route ) {
-        this.props.toRoute(route, this.props.navigator);
-    },
-
-    customAction: function ( opts ) {
-        this.props.customAction(opts);
+        this.props.router.push(route);
     },
 
     // We render both the current and the previous navbar (for animation)
     render: function () {
         return (
-            <View style={[styles.navbarContainer, this.props.style]}>
+            <BlurView blurType="light" style={[styles.navbarContainer, this.props.style]}>
                 <NavBarContent
                     route={this.state.previousRoute}
                     backButtonComponent={this.props.backButtonComponent}
                     rightCorner={this.props.rightCorner}
                     titleStyle={this.props.titleStyle}
                     willDisappear="true"
+                    router={this.props.router}
                 />
                 <NavBarContent
                     route={this.props.currentRoute}
@@ -56,10 +55,10 @@ var NavBarContainer = React.createClass({
                     titleStyle={this.props.titleStyle}
                     goBack={this.goBack}
                     goForward={this.goForward}
-                    customAction={this.customAction}
+                    router={this.props.router}
                 />
-            </View>
-        )
+            </BlurView>
+        );
     }
 });
 
@@ -70,7 +69,6 @@ var styles = StyleSheet.create({
         left: 0,
         right: 0,
         height: 64,
-        backgroundColor: '#5589B7'
     }
 });
 

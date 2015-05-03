@@ -11,27 +11,25 @@ var {
 
 var NavButton = React.createClass({
 
-    onPress: function () {
-        this.props.onPress();
-    },
-
     render () {
         var backButton;
 
         if (this.props.backButtonComponent) {
             var BackButton = this.props.backButtonComponent;
-            backButton = <View>
-                <BackButton />
-            </View>
+            backButton = (
+                <View>
+                    <BackButton />
+                </View>
+            );
         } else {
             backButton = <Text style={styles.navbarText}>Back</Text>
         }
 
         return (
-            <TouchableHighlight onPress={this.onPress} underlayColor="transparent">
-        {backButton}
+            <TouchableHighlight onPress={this.props.onPress} underlayColor="transparent">
+                {backButton}
             </TouchableHighlight>
-        )
+        );
     }
 });
 
