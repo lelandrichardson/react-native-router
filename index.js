@@ -92,13 +92,14 @@ var Router = React.createClass({
                         currentRoute={this.state.route}
                         backButtonComponent={this.props.backButtonComponent}
                         rightCorner={this.props.rightCorner}
+                        leftCorner={this.props.leftCorner}
                         titleStyle={this.props.titleStyle}
                     />
                     }
                 renderScene={this.renderScene}
                 onWillFocus={this.onWillFocus}
             />
-        )
+        );
     }
 });
 

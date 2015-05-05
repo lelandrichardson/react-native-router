@@ -63,8 +63,8 @@ var NavBarContent = React.createClass({
          */
         var leftCornerContent;
 
-        if (this.props.route.leftCorner) {
-            var LeftCorner = this.props.route.leftCorner;
+        if (this.props.route.leftCorner || this.props.leftCorner) {
+            var LeftCorner = this.props.route.leftCorner || this.props.leftCorner;
             leftCornerContent = <LeftCorner router={this.props.router} />;
         } else if (this.props.route.index > 0) {
             leftCornerContent = (
